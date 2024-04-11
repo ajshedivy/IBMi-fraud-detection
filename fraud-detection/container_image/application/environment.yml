@@ -1,0 +1,11 @@
+name: fraud-demo
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - tornado
+  - dill
+  - sklearn-pandas
+  - pip:
+    - trino==0.327.0
