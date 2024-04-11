@@ -32,10 +32,10 @@ spec:
     - default: "quay.io/ajshedivy/demo-base:0.1.0"
       name: base-tag
       type: string
-    - default: "https://github.com/ajshedivy/kubeflow-ppc64le-sandbox.git"
+    - default: "https://github.com/ajshedivy/IBMi-fraud-detection.git"
       name: git-repo
       type: string
-    - default: test/fraud-detection-dash
+    - default: main
       description: tag or branch
       name: git-tag
       type: string
