@@ -508,8 +508,9 @@ def get_model():
     # PREDICT_ENDPOINT = MODEL_ENDPOINT + "/infer"
 
 
-    res_svc = requests.get(PREDICT_ENDPOINT, headers=HEADERS)
+    res_svc = requests.get(MODEL_ENDPOINT, headers=HEADERS)
     response_svc = json.loads(res_svc.text)
+    logging.info(response_svc)
     return jsonify(response_svc)
     
 
