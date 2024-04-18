@@ -11,7 +11,7 @@ import logging
 
 import dash_bootstrap_components as dbc
 import dill
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import numpy as np
 import pandas as pd
 import requests
@@ -494,7 +494,15 @@ def do_predict(test_data: Dict):
 
 @server.route('/api/model/infer', methods=['POST'])
 def predict_endpoint():
-    ...
+    try:
+        input_data = request.get_json()
+        if not input_data:
+            raise ValueError('No input data provided')
+        result = do_predict(input_data)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
 
 @server.route('/api/model/info', methods=['GET'])
 def get_model():
