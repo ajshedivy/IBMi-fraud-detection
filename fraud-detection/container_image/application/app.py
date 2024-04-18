@@ -11,6 +11,7 @@ import logging
 
 import dash_bootstrap_components as dbc
 import dill
+from flask import Flask, jsonify
 import numpy as np
 import pandas as pd
 import requests
@@ -99,12 +100,14 @@ if 'Tested' not in transactions_df.columns:
 
 transformed_data = transform_transaction_data(data)
 
+server = Flask(__name__)
 app = dash.Dash(
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         "https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,600&display=swap",
     ],
-    suppress_callback_exceptions=True
+    suppress_callback_exceptions=True,
+    server=server
 )
 app.title = configs_dict["tabtitle"]
 
@@ -488,6 +491,28 @@ def do_predict(test_data: Dict):
     vdf = dataset_transfomer.transform(test, get_df_mapper())
     
     return predict(vdf)
+
+@server.route('/api/model/infer', methods=['POST'])
+def predict_endpoint():
+    ...
+
+@server.route('/api/model/info', methods=['GET'])
+def get_model():
+    # ------- Model Params -------
+
+    # MODEL_NAME = "fraud-detection-fd6e7"
+    # NAMESPACE = "user-example-com"
+    # HOST = f"{MODEL_NAME}-predictor-default.{NAMESPACE}"
+    # HEADERS = {"Host": HOST}
+    # MODEL_ENDPOINT = f"http://{MODEL_NAME}-predictor-default/v2/models/model"
+    # PREDICT_ENDPOINT = MODEL_ENDPOINT + "/infer"
+
+
+    res_svc = requests.get(PREDICT_ENDPOINT, headers=HEADERS)
+    response_svc = json.loads(res_svc.text)
+    return jsonify(response_svc)
+    
+
 
 
 test_input = {
