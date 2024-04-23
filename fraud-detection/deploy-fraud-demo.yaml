@@ -22,7 +22,7 @@ spec:
       serviceAccountName: demo-application-sa
       containers:
         - name: flask
-          image: "quay.io/ajshedivy/demo-fraud-application@sha256:144671279239fa12863098153bdb22332ac316c94ee2765acde616bd0b109ddb"
+          image: "quay.io/ajshedivy/demo-fraud-application@sha256:0.1.0" 
           imagePullPolicy: Always
           securityContext:
               allowPrivilegeEscalation: false

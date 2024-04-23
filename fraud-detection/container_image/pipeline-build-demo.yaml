@@ -18,7 +18,7 @@ metadata:
       operation: Update
       time: "2023-10-20T21:58:16Z"
   name: build-demo
-  namespace: tornado-app-demo
+  namespace: user-example-com
   annotations:
     sidecar.istio.io/inject: "false"
 spec:
@@ -37,7 +37,7 @@ spec:
       description: path to docker
       name: path
       type: string
-    - default: "quay.io/ajshedivy/demo-test-application:0.1.0"
+    - default: "quay.io/ajshedivy/demo-fraud-application:0.1.0"
       name: application-tag
       type: string
   tasks:
