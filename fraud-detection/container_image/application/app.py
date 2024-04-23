@@ -625,7 +625,7 @@ def update_output(n_clicks, existing_output, selected_rows):
         dash.exceptions.PreventUpdate(f"Error occured while running inference: {e}")
         
     
-    fraud_icon = "✅" if predict_data < 0.5 else "⚠️"
+    fraud_icon = "✅" if predict_data < 0.2 else ("⚠️" if .20 <= predict_data <= .50 else "❌")
     
     # Create the new transaction detail as a collapsible element
     new_transaction_detail = html.Details([
