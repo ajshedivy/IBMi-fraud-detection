@@ -251,7 +251,7 @@ bash-5.1$ curl  -s -w "Time Connect: %{time_connect}s\nTime Start Transfer: %{ti
 
 Output:
 
-```bash
+```text
 {
   "model_name": "model",
   "model_version": "3",
