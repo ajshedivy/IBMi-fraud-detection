@@ -1,26 +1,20 @@
-from collections import deque
 import json
 import logging
 import os
-import random
-import sys
 import time
 from datetime import datetime
-from typing import Any, Dict
-import logging
+from typing import Dict
 
+import dash
 import dash_bootstrap_components as dbc
 import dill
-from flask import Flask, jsonify, request
 import numpy as np
 import pandas as pd
 import requests
+from dash import Input, Output, State, dash_table, dcc, html
+from flask import Flask, jsonify, request
 from jproperties import Properties
 from sklearn_pandas import DataFrameMapper
-from tensorflow import keras
-
-import dash
-from dash import Input, Output, State, dash_table, dcc, html
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -75,7 +69,7 @@ def transform_transaction_data(raw_data: Dict):
         logging.info(key, record)
         
         transformed[key] = {
-            'Transaction ID': key,
+            'ID': key,
             'Amount': record['amount'],
             'Place': merchants[key]['name'],
             'Date': f"{int(record['year'])}-{int(record['month'])}-{int(record['day'])}",
@@ -163,7 +157,7 @@ payload_modal = dbc.Modal(
 transaction_data = dash_table.DataTable(
     id="transactions-table",
     columns=[
-        {"name": "Transaction ID", "id": "Transaction ID"},
+        {"name": "ID", "id": "Transaction ID"},
         {"name": "Amount", "id": "Amount"},
         {"name": "Place", "id": "Place"},
         {"name": "Date", "id": "Date"},
@@ -486,11 +480,15 @@ def predict(vdf: pd.DataFrame) -> pd.DataFrame:
     return response
 
 def do_predict(test_data: Dict):
+    start = time.time()
     dataset_transfomer = FraudDatasetTransformer()
     test = pd.DataFrame([test_data])
     vdf = dataset_transfomer.transform(test, get_df_mapper())
-    
-    return predict(vdf)
+    result = predict(vdf)
+    end = time.time()
+    total_time = (end - start) * 1000 # ms
+    result['time'] = round(total_time, 3)
+    return result
 
 @server.route('/api/model/infer', methods=['POST'])
 def predict_endpoint():
@@ -617,7 +615,7 @@ def update_output(n_clicks, existing_output, selected_rows):
     try:
         predict_result = do_predict(selected_transaction)
         logging.info(f"predict results: {predict_result}")
-        predict_data = predict_result['outputs'][0]['data'][0]
+        predict_data = round(predict_result['outputs'][0]['data'][0] * 100, 3)
         logging.info(f"predict score: {predict_data}")
         prediction_results[selected_row_index] = predict_data
 
@@ -629,7 +627,7 @@ def update_output(n_clicks, existing_output, selected_rows):
     
     # Create the new transaction detail as a collapsible element
     new_transaction_detail = html.Details([
-        html.Summary(f"📝Additional Transaction Info - ID: {selected_row_index} {fraud_icon}", style={'cursor': 'pointer'}),
+        html.Summary(f"📝Additional Transaction Info - ID: {selected_row_index} {fraud_icon}, time⏱️: {predict_result['time']}", style={'cursor': 'pointer'}),
         dash_table.DataTable(
             data=[
                 {'Attribute': 'Merchant Name', 'Value': merchants[selected_row_index]['name']},
@@ -642,7 +640,8 @@ def update_output(n_clicks, existing_output, selected_rows):
                 {'Attribute': 'Merchant State', 'Value': selected_transaction['merchant state']},
                 {'Attribute': 'ZIP', 'Value': selected_transaction['zip']},
                 {'Attribute': 'Errors', 'Value': selected_transaction['errors?']},
-                {'Attribute': 'Fraud Prediction', 'Value': str(predict_data)} # predict_result[0]['data']
+                {'Attribute': 'Fraud Likelihood %', 'Value': str(predict_data)}, # predict_result[0]['data']
+                {'Attribute': 'Inference Time', 'Value': predict_result['time']}
             ],
             columns=[{'name': i, 'id': i} for i in ['Attribute', 'Value']],
             style_table={'overflowX': 'auto'},
