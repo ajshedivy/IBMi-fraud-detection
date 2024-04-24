@@ -157,7 +157,7 @@ payload_modal = dbc.Modal(
 transaction_data = dash_table.DataTable(
     id="transactions-table",
     columns=[
-        {"name": "ID", "id": "Transaction ID"},
+        {"name": "ID", "id": "ID"},
         {"name": "Amount", "id": "Amount"},
         {"name": "Place", "id": "Place"},
         {"name": "Date", "id": "Date"},
@@ -182,7 +182,7 @@ transaction_data = dash_table.DataTable(
         {
             "if": {
                 "filter_query": '{Fraud Status} = "Detected"',
-                "column_id": "Transaction ID",
+                "column_id": "ID",
             },
             "backgroundColor": "rgba(255, 0, 0, 0.7)",
             "color": "white",
@@ -627,7 +627,7 @@ def update_output(n_clicks, existing_output, selected_rows):
     
     # Create the new transaction detail as a collapsible element
     new_transaction_detail = html.Details([
-        html.Summary(f"📝Additional Transaction Info - ID: {selected_row_index} {fraud_icon}, time⏱️: {predict_result['time']}", style={'cursor': 'pointer'}),
+        html.Summary(f"📝Additional Transaction Info - ID: {selected_row_index} {fraud_icon}, time⏱️(ms): {predict_result['time']}", style={'cursor': 'pointer'}),
         dash_table.DataTable(
             data=[
                 {'Attribute': 'Merchant Name', 'Value': merchants[selected_row_index]['name']},
@@ -641,7 +641,7 @@ def update_output(n_clicks, existing_output, selected_rows):
                 {'Attribute': 'ZIP', 'Value': selected_transaction['zip']},
                 {'Attribute': 'Errors', 'Value': selected_transaction['errors?']},
                 {'Attribute': 'Fraud Likelihood %', 'Value': str(predict_data)}, # predict_result[0]['data']
-                {'Attribute': 'Inference Time', 'Value': predict_result['time']}
+                {'Attribute': 'Inference Time (ms)', 'Value': predict_result['time']}
             ],
             columns=[{'name': i, 'id': i} for i in ['Attribute', 'Value']],
             style_table={'overflowX': 'auto'},
