@@ -615,7 +615,7 @@ def update_output(n_clicks, existing_output, selected_rows):
     try:
         predict_result = do_predict(selected_transaction)
         logging.info(f"predict results: {predict_result}")
-        predict_data = round(predict_result['outputs'][0]['data'][0] * 100, 3)
+        predict_data = predict_result['outputs'][0]['data'][0]
         logging.info(f"predict score: {predict_data}")
         prediction_results[selected_row_index] = predict_data
 
@@ -640,7 +640,7 @@ def update_output(n_clicks, existing_output, selected_rows):
                 {'Attribute': 'Merchant State', 'Value': selected_transaction['merchant state']},
                 {'Attribute': 'ZIP', 'Value': selected_transaction['zip']},
                 {'Attribute': 'Errors', 'Value': selected_transaction['errors?']},
-                {'Attribute': 'Fraud Likelihood %', 'Value': str(predict_data)}, # predict_result[0]['data']
+                {'Attribute': 'Fraud Likelihood %', 'Value': str(round(predict_data * 100, 3))}, # predict_result[0]['data']
                 {'Attribute': 'Inference Time (ms)', 'Value': predict_result['time']}
             ],
             columns=[{'name': i, 'id': i} for i in ['Attribute', 'Value']],
