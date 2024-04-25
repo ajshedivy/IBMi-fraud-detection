@@ -29,6 +29,10 @@ HEADERS = {"Host": HOST}
 MODEL_ENDPOINT = f"http://{MODEL_NAME}-predictor-default/v2/models/model"
 PREDICT_ENDPOINT = MODEL_ENDPOINT + "/infer"
 
+# load model
+res_svc = requests.get(MODEL_ENDPOINT, headers=HEADERS)
+response_svc = json.loads(res_svc.text)
+
 # instantiate config
 configs = Properties()
 # load properties into configs
@@ -417,8 +421,8 @@ def get_df_mapper():
 
 def predict(vdf: pd.DataFrame) -> pd.DataFrame:
     
-    res_svc = requests.get(MODEL_ENDPOINT, headers=HEADERS)
-    response_svc = json.loads(res_svc.text)
+    # res_svc = requests.get(MODEL_ENDPOINT, headers=HEADERS)
+    # response_svc = json.loads(res_svc.text)
 
     # Data preparation
     x = vdf.drop(vdf.columns.values[0], axis=1).to_numpy()
