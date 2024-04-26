@@ -105,9 +105,41 @@ class FraudDetectionPredictor:
         return float(pred)
     
     
+    
+MODEL_PATH = 'model/model.onnx'
+
+def load_model():
+    logging.info(f"Starting a CPU inference session using the model {MODEL_PATH}")
+    session = ort.InferenceSession(MODEL_PATH, providers=["CPUExecutionProvider"])
+    input_name = session.get_inputs()[0].name
+    sequence_length = session.get_inputs()[0].shape[1]  # Model's expected sequence length
+    num_features = session.get_inputs()[0].shape[2]   # Model's expected number of features per sequence element
+    return session, input_name, sequence_length, num_features
+
+def prepare_data(vdf: pd.DataFrame, num_features: int, check_padding=False):
+    # Data preparation
+    x = vdf.drop(vdf.columns.values[0], axis=1).to_numpy().astype(np.float32)
+    if check_padding:
+        original_features = x.shape[1]
+        if original_features < num_features:
+            x = np.pad(x, ((0, 0), (0, num_features - original_features)), mode='constant', constant_values=0)
+    return x[:, :num_features]
+
+def predict(session, input_name, sequence_length, num_features, vdf: pd.DataFrame, check_padding=False):
+    x_padded = prepare_data(vdf, num_features, check_padding)
+    x_reshaped = np.tile(x_padded, (sequence_length, 1)).reshape(1, sequence_length, num_features)
+    outputs = session.run(None, {input_name: x_reshaped})
+    pred = outputs[0][0][0]
+    logging.info(f"Prediction: {round(pred, 3)} => {int(round(pred, 0))}")
+    return float(pred)
+
+# Usage
+session, input_name, sequence_length, num_features = load_model()
+    
+    
 # setup Flask App
 app = Flask(__name__)
-predictor = FraudDetectionPredictor('fraud_detection')
+# predictor = FraudDetectionPredictor('fraud_detection')
 dataset_transfomer = FraudDatasetTransformer()
 mapper = get_df_mapper()
 
@@ -121,7 +153,7 @@ def do_predict(test_data: Dict):
     vdf = dataset_transfomer.transform(test, mapper)
     
     # run inference
-    result = predictor.predict(vdf)
+    result = predict(session, input_name, sequence_length, num_features, vdf)
     end = time.time()
     
     # prepare output object
