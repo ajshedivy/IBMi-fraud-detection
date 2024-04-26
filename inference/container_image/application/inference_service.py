@@ -10,6 +10,10 @@ from sklearn_pandas import DataFrameMapper
 import pandas as pd
 from flask import Flask, request, jsonify
 
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
 class FraudDatasetTransformer:
     def __init__(self): ...
 
@@ -97,7 +101,7 @@ class FraudDetectionPredictor:
         pred = outputs[0][0][0]
         logging.info(f"Actual ({y[0]}) vs. Prediction ({round(pred, 3)} => {int(round(pred, 0))})")
 
-        return pred
+        return float(pred)
     
     
 # setup Flask App

@@ -20,15 +20,26 @@ spec:
       - name: fraud-predictor-app
         image: quay.io/ajshedivy/demo-fraud-inference-app@sha256:b195e5f48931190231b01f11c71c0d33f084df9a8444eecdf1f85df160c33d59
         imagePullPolicy: Always
+        securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+            seccompProfile:
+              type: RuntimeDefault
         ports:
         - containerPort: 5000
+          name: http1
+          protocol: TCP
         resources:
-          limits:
-            cpu: "1"
-            memory: "1Gi"
-          requests:
-            cpu: "0.5"
-            memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 100Mi
 
 ---
 apiVersion: v1
@@ -42,3 +53,17 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 5000
+
+--- 
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: fraud-predictor-app-route
+spec:
+  to:
+    kind: Service
+    name: fraud-predictor-app-service
+  port:
+    targetPort: 5000
+
