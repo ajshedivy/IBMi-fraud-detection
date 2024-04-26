@@ -22,7 +22,7 @@ spec:
       serviceAccountName: fraud-onnx-predictor-sa
       containers:
         - name: flask
-          image: "quay.io/ajshedivy/demo-fraud-inference-app@sha256:582e05527848ed6064de5d06d8b17303740ebb6d52237153e5dff7e16dc280c0" 
+          image: "quay.io/ajshedivy/demo-fraud-inference-app@sha256:77c95ce8952213795e5cffca5f2ce52ebd029c0a1beddf7d3083b161211ea6a6"
           imagePullPolicy: Always
           securityContext:
               allowPrivilegeEscalation: false
