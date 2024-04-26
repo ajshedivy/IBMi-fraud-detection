@@ -24,6 +24,11 @@ RUN mamba install -c rocketce --yes \
     && mamba clean --all --yes \
     && fix-permissions ${CONDA_DIR}
 
+RUN pip install flask==3.0.0 \
+    && pip cache purge \
+    && fix-permissions ${CONDA_DIR} \
+    && fix-permissions ${HOME}
+
 
 COPY . /workspace
 RUN fix-permissions /workspace

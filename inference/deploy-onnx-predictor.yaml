@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-predictor-app
+  labels:
+    app: fraud-predictor-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fraud-predictor-app
+  template:
+    metadata:
+      labels:
+        app: fraud-predictor-app
+      annotations:
+        sidecar.istio.io/inject: "false" 
+    spec:
+      containers:
+      - name: fraud-predictor-app
+        image: quay.io/ajshedivy/demo-fraud-inference-app@sha256:b195e5f48931190231b01f11c71c0d33f084df9a8444eecdf1f85df160c33d59
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fraud-predictor-app-service
+spec:
+  selector:
+    app: fraud-predictor-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
