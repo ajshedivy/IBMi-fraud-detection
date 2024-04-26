@@ -53,6 +53,11 @@ class FraudDetectionPredictor:
     
     def __init__(self, name: str) -> None:
         self.name = name
+        self.load()
+        self.input_name = self.INFERENCE_SESSION.get_inputs()[0].name
+        self.sequence_length = self.INFERENCE_SESSION.get_inputs()[0].shape[1]  # Model's expected sequence length
+        self.num_features = self.INFERENCE_SESSION.get_inputs()[0].shape[2]   # Model's expected number of features per sequence element
+        
         
     def load(self):
         logging.info(
@@ -63,39 +68,35 @@ class FraudDetectionPredictor:
             FraudDetectionPredictor.MODEL_PATH, providers=["CPUExecutionProvider"]
         )
     
-    def predict(self, vdf: pd.DataFrame) -> pd.DataFrame:
+    def predict(self, vdf: pd.DataFrame, check_padding = False) -> pd.DataFrame:
 
         # Data preparation
         x = vdf.drop(vdf.columns.values[0], axis=1).to_numpy().astype(np.float32)
         y = np.array([vdf[vdf.columns.values[0]].iloc[0]])
 
-        # Get input name and shape
-        input_name = self.INFERENCE_SESSION.get_inputs()[0].name
-        sequence_length = self.INFERENCE_SESSION.get_inputs()[0].shape[1]  # Model's expected sequence length
-        num_features = self.INFERENCE_SESSION.get_inputs()[0].shape[2]   # Model's expected number of features per sequence element
-
         # Check if the original features match the required total features
-        original_features = x.shape[1]
-        if original_features < num_features:
-            # If fewer, we may need to pad or adjust the data; this is situational and may not be exactly correct without more context
-            # For now, let's assume padding with zeros is acceptable
-            x_padded = np.pad(
-                x,
-                ((0, 0), (0, num_features - original_features)),
-                mode="constant",
-                constant_values=0,
-            )
+        if check_padding:
+            original_features = x.shape[1]
+            if original_features < self.num_features:
+                # If fewer, we may need to pad or adjust the data; this is situational and may not be exactly correct without more context
+                # For now, let's assume padding with zeros is acceptable
+                x_padded = np.pad(
+                    x,
+                    ((0, 0), (0, self.num_features - original_features)),
+                    mode="constant",
+                    constant_values=0,
+                )
         else:
-            # If it matches or exceeds, truncate or reshape accordingly (though unusual for a single data point)
-            x_padded = x[:, :num_features]
+            x_padded = x[:, :self.num_features]
+            
 
         # Reshape to [1, sequence_length, num_features], replicating the single data point across the new sequence length
-        x_reshaped = np.tile(x_padded, (sequence_length, 1)).reshape(
-            1, sequence_length, num_features
+        x_reshaped = np.tile(x_padded, (self.sequence_length, 1)).reshape(
+            1, self.sequence_length, self.num_features
         )
 
         # Run the model
-        outputs = self.INFERENCE_SESSION.run(None, {input_name: x_reshaped})
+        outputs = self.INFERENCE_SESSION.run(None, {self.input_name: x_reshaped})
 
         # Handle response
         pred = outputs[0][0][0]
@@ -109,7 +110,6 @@ app = Flask(__name__)
 predictor = FraudDetectionPredictor('fraud_detection')
 dataset_transfomer = FraudDatasetTransformer()
 mapper = get_df_mapper()
-predictor.load()
 
 
 def do_predict(test_data: Dict):
