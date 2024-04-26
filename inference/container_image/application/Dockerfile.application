@@ -21,6 +21,9 @@ WORKDIR /workspace
 
 RUN mamba install -c rocketce --yes \
     rocketce::onnxruntime==1.15.1=hd867603_cpu_py39_pb4.21.12_1 \
+    conda-forge::scikit-learn=1.2.0 \
+    conda-forge::sklearn-pandas \
+    main::dill \
     && mamba clean --all --yes \
     && fix-permissions ${CONDA_DIR}
 
