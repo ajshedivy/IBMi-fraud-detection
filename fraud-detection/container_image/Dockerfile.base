@@ -13,7 +13,7 @@
 # limitations under the License.
 ARG ROOT_CONTAINER=quay.io/almalinux/almalinux:8.6
 FROM $ROOT_CONTAINER
-LABEL maintainer="Nick Lawrence ntl@us.ibm.com"
+LABEL maintainer="Adam Shedivy IBM"
 
 USER root
 WORKDIR /root

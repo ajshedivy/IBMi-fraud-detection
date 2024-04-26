@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ARG KSERVE_CONTAINER
-FROM $KSERVE_CONTAINER
-LABEL maintainer="Nick Lawrence ntl@us.ibm.com"
+ARG BASE_CONTAINER
+FROM $BASE_CONTAINER
+LABEL maintainer="Adam Shedivy"
 
 USER root
 WORKDIR /workspace

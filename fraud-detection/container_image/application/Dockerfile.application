@@ -15,7 +15,7 @@
 ARG BASE_CONTAINER
 FROM $BASE_CONTAINER
 
-LABEL maintainer="Nick Lawrence ntl@us.ibm.com"
+LABEL maintainer="Adam Shedivy IBM"
 
 USER root
 

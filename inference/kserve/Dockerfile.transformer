@@ -13,7 +13,7 @@
 # limitations under the License.
 ARG KSERVE_CONTAINER
 FROM $KSERVE_CONTAINER
-LABEL maintainer="Nick Lawrence ntl@us.ibm.com"
+LABEL maintainer="Adam Shedivy IBM"
 
 USER root
 WORKDIR /workspace
