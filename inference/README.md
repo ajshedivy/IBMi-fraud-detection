@@ -86,9 +86,16 @@ wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/laten
 ```
 Usage:
 ```bash
-$ python test_onnx_endpoint.py
+bash-5.1$ python test_onnx_endpoint.py -h
 usage: test_onnx_endpoint.py [-h] -d DATA -m MODEL
-test_onnx_endpoint.py: error: the following arguments are required: -d/--data, -m/--model
+
+Test ONNX endpoint
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DATA, --data DATA  Path to data file
+  -m MODEL, --model MODEL
+                        Model inference endpoint
 ```
 
 
