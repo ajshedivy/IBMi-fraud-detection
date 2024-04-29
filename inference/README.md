@@ -84,6 +84,13 @@ To Run the performance showcase, download the `test_onnx_endpoint.py` and `test_
 wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/latency/inference/test_onnx_endpoint.py -O test_onnx_endpoint.py
 wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/latency/inference/test_data.json -O test_data.json
 ```
+Usage:
+```bash
+$ python test_onnx_endpoint.py
+usage: test_onnx_endpoint.py [-h] -d DATA -m MODEL
+test_onnx_endpoint.py: error: the following arguments are required: -d/--data, -m/--model
+```
+
 
 Run the script:
 
