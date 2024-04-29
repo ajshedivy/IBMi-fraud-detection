@@ -2,6 +2,7 @@ import json
 import subprocess
 import re
 import sys
+import argparse
 
 
 onnx_endpoint = 'https://demo-application-onnx-user-example-com.apps.b2s001.pbm.ihost.com'
@@ -11,12 +12,12 @@ def load_payloads(file_path):
     with open(file_path, 'r') as file:
         return json.load(file)
 
-def run_curl_command(payload):
+def run_curl_command(payload, model_endpoint):
     """Run curl command with a given JSON payload."""
     curl_command = [
         'curl', '-s',
         '-k', '-X', 'POST',
-        f'{onnx_endpoint}/api/model/predict',
+        f'{model_endpoint}/api/model/predict',
         '-H', 'Content-Type: application/json',
         '-d', json.dumps(payload)
     ]
@@ -37,16 +38,19 @@ def parse_output(output):
         return None
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python script_name.py <path_to_data_file>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Test ONNX endpoint")
+    parser.add_argument('-d', '--data', required=True, help='Path to data file')
+    parser.add_argument('-m', '--model', required=True, help='Model inference endpoint')
+    
+    args = parser.parse_args()
 
-    file_path = sys.argv[1]
+    file_path = args.data
+    model_endpoint = args.model
     payloads = load_payloads(file_path)
     times = []
 
     for payload in payloads:
-        output = run_curl_command(payload)
+        output = run_curl_command(payload, model_endpoint)
         print(output)
         time_taken = parse_output(output)
         if time_taken is not None:
