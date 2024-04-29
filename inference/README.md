@@ -88,7 +88,7 @@ wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/laten
 Run the script:
 
 ```bash
-bash-5.1$ python test_onnx_endpoint.py test_data.json
+bash-5.1$ python test_onnx_endpoint.py -d test_data.json -m 'https://demo-application-onnx-user-example-com.apps.b2s001.pbm.ihost.com' 
 {
   "result": 0.0007616877555847168,
   "time": 53.289
