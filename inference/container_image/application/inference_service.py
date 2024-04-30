@@ -147,21 +147,29 @@ mapper = get_df_mapper()
 def do_predict(test_data: Dict, transformed: str):
     ret = {}
     truthy_transformed = transformed.lower() == 'true'
+    transformed_time = 0
     start = time.time()
     
     # setup transformer
     test = pd.DataFrame([test_data])
     if not truthy_transformed:
+        start_t = time.time()
         test = dataset_transfomer.transform(test, mapper)
+        end_t = time.time()
+        transformed_time = (end_t - start_t) * 1000
     
     # run inference
+    start_p = time.time()
     result = predict(session, input_name, sequence_length, num_features, test)
     end = time.time()
     
     # prepare output object
     ret['result'] = result
     total_time = (end - start) * 1000 # ms
-    ret['time'] = round(total_time, 3)
+    predict_time = (end-start_p) * 1000
+    ret['transform_time'] = round(transformed_time, 3)
+    ret['predict_time'] = round(predict_time, 3)
+    ret['total_time'] = round(total_time, 3)
     
     return ret
     
