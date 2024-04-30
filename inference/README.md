@@ -87,7 +87,7 @@ wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/laten
 Usage:
 ```bash
 bash-5.1$ python test_onnx_endpoint.py -h
-usage: test_onnx_endpoint.py [-h] -d DATA -m MODEL
+usage: test_onnx_endpoint.py [-h] -d DATA -m MODEL [-t]
 
 Test ONNX endpoint
 
@@ -96,8 +96,8 @@ optional arguments:
   -d DATA, --data DATA  Path to data file
   -m MODEL, --model MODEL
                         Model inference endpoint
+  -t, --transformed     flag for using transformed data
 ```
-
 
 Run the script:
 
@@ -129,5 +129,48 @@ bash-5.1$ python test_onnx_endpoint.py -d test_data.json -m 'https://demo-applic
 }
 
 Average Request Time: 50.965 milliseconds
+```
+
+### Run Test Showcase with preprocessed Inputs
+
+There is also an option to run the tests with preprocessed transactions. First download the `transformed_data.json` file:
+```bash
+wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/latency/inference/transformed_data.json -O transformed_data.json
+```
+
+Then run the test script by passing in the new json file, with the additional `-t` flag:
+
+```bash
+bash-5.1$ python test_onnx_endpoint.py -t -d transformed_data.json -m https://demo-application-onnx-test-fraud-model.apps.b2s001.pbm.ihost.com
+```
+Outputs:
+
+```bash
+{
+  "result": 0.0007616877555847168,
+  "time": 4.603
+}
+
+{
+  "result": 0.24492061138153076,
+  "time": 4.102
+}
+
+{
+  "result": 0.004086315631866455,
+  "time": 4.287
+}
+
+{
+  "result": 0.0003190934658050537,
+  "time": 2.758
+}
+
+{
+  "result": 0.9969544410705566,
+  "time": 2.741
+}
+
+Average Request Time: 3.6982 milliseconds
 ```
 
