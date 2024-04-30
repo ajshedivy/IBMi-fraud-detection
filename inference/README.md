@@ -84,11 +84,25 @@ To Run the performance showcase, download the `test_onnx_endpoint.py` and `test_
 wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/latency/inference/test_onnx_endpoint.py -O test_onnx_endpoint.py
 wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/latency/inference/test_data.json -O test_data.json
 ```
+Usage:
+```bash
+bash-5.1$ python test_onnx_endpoint.py -h
+usage: test_onnx_endpoint.py [-h] -d DATA -m MODEL
+
+Test ONNX endpoint
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DATA, --data DATA  Path to data file
+  -m MODEL, --model MODEL
+                        Model inference endpoint
+```
+
 
 Run the script:
 
 ```bash
-bash-5.1$ python test_onnx_endpoint.py test_data.json
+bash-5.1$ python test_onnx_endpoint.py -d test_data.json -m 'https://demo-application-onnx-user-example-com.apps.b2s001.pbm.ihost.com' 
 {
   "result": 0.0007616877555847168,
   "time": 53.289
