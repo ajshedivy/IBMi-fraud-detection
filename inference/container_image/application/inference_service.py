@@ -144,16 +144,18 @@ dataset_transfomer = FraudDatasetTransformer()
 mapper = get_df_mapper()
 
 
-def do_predict(test_data: Dict):
+def do_predict(test_data: Dict, transformed: str):
     ret = {}
+    truthy_transformed = transformed.lower() == 'true'
     start = time.time()
     
     # setup transformer
     test = pd.DataFrame([test_data])
-    vdf = dataset_transfomer.transform(test, mapper)
+    if not truthy_transformed:
+        test = dataset_transfomer.transform(test, mapper)
     
     # run inference
-    result = predict(session, input_name, sequence_length, num_features, vdf)
+    result = predict(session, input_name, sequence_length, num_features, test)
     end = time.time()
     
     # prepare output object
@@ -168,9 +170,10 @@ def do_predict(test_data: Dict):
 def predict_endpoint():
     try:
         input_data = request.get_json()
+        transformed = request.args.get('transformed', default='false', type=str)
         if not input_data:
             raise ValueError('No input data provided')
-        result = do_predict(input_data)
+        result = do_predict(input_data, transformed)
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
