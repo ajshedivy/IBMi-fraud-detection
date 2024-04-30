@@ -45,7 +45,7 @@ def main():
     parser = argparse.ArgumentParser(description="Test ONNX endpoint")
     parser.add_argument('-d', '--data', required=True, help='Path to data file')
     parser.add_argument('-m', '--model', required=True, help='Model inference endpoint')
-    parser.add_argument('t', '--transformed', required=False, action='store_true', help='flag for using transformed data')
+    parser.add_argument('-t', '--transformed', required=False, action='store_true', help='flag for using transformed data')
     
     args = parser.parse_args()
 
