@@ -102,7 +102,7 @@ optional arguments:
 Run the script:
 
 ```bash
-bash-5.1$ python test_onnx_endpoint.py -d test_data.json -m 'https://demo-application-onnx-user-example-com.apps.b2s001.pbm.ihost.com' 
+python test_onnx_endpoint.py -d test_data.json -m 'https://demo-application-onnx-user-example-com.apps.b2s001.pbm.ihost.com' 
 {
   "result": 0.0007616877555847168,
   "time": 53.289
@@ -141,7 +141,7 @@ wget https://raw.githubusercontent.com/ajshedivy/IBMi-fraud-detection/test/laten
 Then run the test script by passing in the new json file, with the additional `-t` flag:
 
 ```bash
-bash-5.1$ python test_onnx_endpoint.py -t -d transformed_data.json -m https://demo-application-onnx-test-fraud-model.apps.b2s001.pbm.ihost.com
+python test_onnx_endpoint.py -t -d transformed_data.json -m https://demo-application-onnx-test-fraud-model.apps.b2s001.pbm.ihost.com
 ```
 This will run use the new endpoint: `/api/model/predict?transformed=true`
 Outputs:
