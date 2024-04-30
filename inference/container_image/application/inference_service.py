@@ -169,7 +169,7 @@ def do_predict(test_data: Dict, transformed: str):
     predict_time = (end-start_p) * 1000
     ret['transform_time'] = round(transformed_time, 3)
     ret['predict_time'] = round(predict_time, 3)
-    ret['total_time'] = round(total_time, 3)
+    ret['time'] = round(total_time, 3)
     
     return ret
     
