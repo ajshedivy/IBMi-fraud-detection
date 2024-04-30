@@ -143,6 +143,7 @@ Then run the test script by passing in the new json file, with the additional `-
 ```bash
 bash-5.1$ python test_onnx_endpoint.py -t -d transformed_data.json -m https://demo-application-onnx-test-fraud-model.apps.b2s001.pbm.ihost.com
 ```
+This will run use the new endpoint: `/api/model/predict?transformed=true`
 Outputs:
 
 ```bash
