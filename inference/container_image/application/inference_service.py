@@ -32,14 +32,13 @@ class FraudDatasetTransformer:
         Returns:
             _type_: _description_
         """
-        tdf = dataset.copy()
-        tdf["merchant name"] = tdf["merchant name"].astype(str)
-        tdf.drop(["mcc", "zip", "merchant state"], axis=1, inplace=True)
-        tdf.sort_values(by=["user", "card"], inplace=True)
-        tdf.reset_index(inplace=True, drop=True)
+        dataset["merchant name"] = dataset["merchant name"].astype(str)
+        dataset.drop(["mcc", "zip", "merchant state"], axis=1, inplace=True)
+        dataset.sort_values(by=["user", "card"], inplace=True)
+        dataset.reset_index(inplace=True, drop=True)
 
-        tdf = mapper.transform(tdf)
-        return tdf
+        dataset = mapper.transform(dataset)
+        return dataset
 
 
 def get_df_mapper():
