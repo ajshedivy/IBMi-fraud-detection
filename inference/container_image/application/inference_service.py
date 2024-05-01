@@ -33,9 +33,9 @@ class FraudDatasetTransformer:
             _type_: _description_
         """
         dataset["merchant name"] = dataset["merchant name"].astype(str)
-        dataset.drop(["mcc", "zip", "merchant state"], axis=1, inplace=True)
-        dataset.sort_values(by=["user", "card"], inplace=True)
-        dataset.reset_index(inplace=True, drop=True)
+        # dataset.drop(["mcc", "zip", "merchant state"], axis=1, inplace=True)
+        # dataset.sort_values(by=["user", "card"], inplace=True)
+        # dataset.reset_index(inplace=True, drop=True)
 
         dataset = mapper.transform(dataset)
         return dataset
