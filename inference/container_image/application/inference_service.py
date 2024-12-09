@@ -187,7 +187,7 @@ def predict_endpoint():
     
 
 if __name__ == '__main__':
-    SERVICE_PORT = os.getenv("SERVICE_PORT", default="5000")
+    SERVICE_PORT = os.getenv("SERVICE_PORT", default="5005")
     DEBUG_MODE = eval(os.getenv("DEBUG_MODE", default="True"))
     app.run(
         host="0.0.0.0", port=SERVICE_PORT, debug=DEBUG_MODE

@@ -1,0 +1,6 @@
+python==3.9
+onnxruntime==1.15.1
+scikit-learn==1.2.0
+sklearn-pandas
+dill
+flask==3.0.0

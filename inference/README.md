@@ -175,3 +175,75 @@ Outputs:
 Average Request Time: 3.6982 milliseconds
 ```
 
+## Deploy App Locally
+
+To Run the application locally, first setup the python environment using mamba or pip:
+
+## Micromamba (recommended)
+
+1. install micromamba:
+```bash 
+bash -c "$(curl https://micromamba.pfx.dev/install.sh)"
+```
+
+1. Create a new environment:
+```bash
+cd container_image/application
+micromamba env create -f environment.yml
+```
+
+3. Activate the environment:
+```bash
+micromamba activate ibmi_fraud_detection
+```
+
+## Run the application:
+
+In a terminal, navigate to the `container_image/application` directory and run the following command:
+```bash
+cd container_image/application
+python inference_service.py  
+```
+
+## Test the application:
+
+In a new terminal, run the following command to test the fraud detection model:
+
+```bash
+curl -s -k -X POST http://127.0.0.1:5005/api/model/predict -H "Content-Type: application/json" -d '{
+    "index": 1,
+    "user": 2,
+    "card": 4,
+    "year": 2022,
+    "month": 9,
+    "day": 2,
+    "time": "14:09",
+    "amount": "$149345.84",
+    "use chip": "Online Transaction",
+    "merchant name": 3452760747765970571,
+    "merchant city": "ONLINE",
+    "merchant state": "",
+    "zip": 0,
+    "mcc": 3174,
+    "errors?": "",
+    "is fraud?": "Yes"
+}'
+
+```
+
+Output:
+```bash
+{
+  "predict_time": 1.659,
+  "result": 0.24492061138153076,
+  "time": 30.167,
+  "transform_time": 27.082
+}
+```
+
+
+
+
+
+
+
